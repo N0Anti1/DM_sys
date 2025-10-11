@@ -7,15 +7,17 @@ const int NB_HERISSON = 2;
 const int JOUEUR_MAX = 26;
 const int LARGEUR = 3;
 const int HAUTEUR = 3;
+#define move_up 'u'
+#define move_down 'b'
+#define move_right 'd'
+const char* move_tutorial = "t";
+const char* move_rules = "r";
+const char* move_option = "o";
+
 static char buffer[100];
 static char trash[100];
 static struct winsize w;
-#define move_up 'm'
-#define move_down 'b'
-#define move_right 'd'
-#define move_tutorial 't'
-#define move_rules 'r'
-#define move_option 'o'
+
 
 enum langue {FRANCAIS, ENGLISH};
 
@@ -26,7 +28,6 @@ void scan() {
     trash[0] = (char)0;
     scanf("%s", buffer);
     scanf("%[^\n]", trash);
-    printf("trash : %s\n", trash);
 }
 
 void clear_std() {
@@ -106,22 +107,24 @@ void player_turn(board_t* b, int player, bool possible_v) {
     buffer[0] = '0';
     int line = string_to_ing(buffer)-1;
     char dir = trash[1];
-    printf("%d,%d, |trash|=%ld\n", line, row, strlen(trash));
-
+    
     // Check if the cell [line,row] exist
     if (row < 0 || row >= LARGEUR || line < 0 || line >= HAUTEUR) {
         printf("La case n'existe pas !\n");
         player_turn(b, player, possible_v);
+        return;
     }
     // Check if the entry is correct
-    if (!possible_v || (possible_v && strlen(trash) != 2)) {
+    if (strlen(trash) != 2) {
         printf("L'entrée est incorrecte, regardez le tutoriel !\n");
         player_turn(b, player, possible_v);
+        return;
     }
     // Check if the move is possible
     if (!possible_v && (dir == move_up || dir == move_down)) {
         printf("Tu ne peux plus jouer en vertical !!\n");
         player_turn(b, player, possible_v);
+        return;
     }
 
     if (dir == move_up || dir == move_down) {
@@ -133,17 +136,23 @@ void player_turn(board_t* b, int player, bool possible_v) {
             printf("Tu ne peux pas faire ce coup !\n");
             player_turn(b, player, possible_v);
         }
+        return;
     }
+    
     if (possible_v && dir != move_right) {
         printf("Précisez votre direction, vous avez encore du choix !\n");
         player_turn(b, player, possible_v);
+        return;
     }
+    
     if (is_playable_h(b, line, row)) {
         play_h(b, line, row);
         return;
     }
+
     printf("Tu ne peux pas faire ce coup !\n");
     player_turn(b, player, possible_v);
+    return;
 }
 
 void play_game(int nb_player) {
@@ -155,6 +164,7 @@ void play_game(int nb_player) {
             player_turn(NULL, player, true);
         }
     }
+    printf("Score :\n");
     printf("Fin de la partie, entrée qqch pour continuer\n");
     scanf("%[^\n]", buffer);
 }
@@ -162,28 +172,27 @@ void play_game(int nb_player) {
 
 int main() {
     bool running = true;
- 
+
     while (running)
     {
         clear_std();
 
-        printf("Options ('%c')\n", move_option);
+        printf("Options ('%s')\n", move_option);
         printf("\n\n\n");
         print_center("BIENVENUE sur le jeu Igel Ärgern");
         print_center("Le jeu de course de hérisson !!\n");
-        printf("Jouer (entrez le nombre de joueur (entre 2 et 26))\n");
-        printf("Tutoriel ('%c')\n", move_tutorial);
-        printf("Règles ('%c')\n", move_rules);
+        printf("Jouer (entrez le nombre de joueur [2-26])\n");
+        printf("Tutoriel ('%s')\n", move_tutorial);
+        printf("Règles ('%s')\n", move_rules);
         printf("Quitter ('q')\n");
         
         scan();
         
-
         int nb_player = string_to_ing(buffer);
-        if (strcmp(buffer, "t") == 0) {
+        if (strcmp(buffer, move_tutorial) == 0) {
             print_tutorial();
         }
-        else if (strcmp(buffer, "r") == 0) {
+        else if (strcmp(buffer, move_rules) == 0) {
             print_rules();
         }
         else if (2 <= nb_player && nb_player <= 26) {
