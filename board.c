@@ -79,7 +79,7 @@ void board_print(board_t* b, int highlighted_line) {
           else if (row == -1) printf("    %c", highlighted_line == line ? '>' : ' ');
           else {
             printf(" ");
-            cell_print(&(b->board[line][row]), slice);
+            cell_print(&(b->board[line][row]), slice, highlighted_line == line);
             printf(" ");
           }
         }
@@ -93,6 +93,20 @@ void board_print(board_t* b, int highlighted_line) {
 
       }
       printf("\n");
+    }
+  }
+}
+
+
+// ELISA :
+void init_board(board_t* b, int nb_player) {
+  // Place les pièges
+  b->board[0][2].is_trap = true;
+
+  // Ajoute les joueurs
+  for (int i = 0; i < NB_HEDGEHOG; i++) {
+    for (int n = nb_player-1; n >= 0; n -= 1) {
+      board_push(b, rand() % HEIGHT, 0, (char)(n+65));
     }
   }
 }

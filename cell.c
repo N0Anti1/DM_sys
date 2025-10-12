@@ -49,9 +49,10 @@ bool cell_is_trap(cell_t* c) {
 }
 
 
-void cell_print(cell_t* c, int slice) {
+void cell_print(cell_t* c, int slice, bool highlighted) {
     if (slice == 0) {
         if (cell_is_trap(c)) printf(" VVV ");
+        else if (highlighted) printf(" === ");
         else printf(" --- ");
     }
     else if (slice == 1) {
@@ -92,7 +93,19 @@ void cell_print(cell_t* c, int slice) {
     }    
     else if (slice == 3) {
         if (cell_is_trap(c)) printf(" ^%c^ ", cell_height(c) <= 1 ? '^' : (char)48+cell_height(c));
-        else printf(" -%c- ", cell_height(c) <= 1 ? '-' : (char)48+cell_height(c));
+        else {
+            char c1 = '-', c2 = '-', c3 = '-';
+            if (highlighted) {
+                c1 = '=';
+                c2 = '=';
+                c3 = '=';
+            }
+            if (cell_height(c) >= 100) c1 = (char)(cell_height(c)/100+48);
+            if (cell_height(c) >= 10) c3 = (char)(cell_height(c)%10+48);
+            if (cell_height(c) >= 10) c2 = (char)((cell_height(c)%100)/10+48);
+            else if (cell_height(c) > 0) c2 = (char)(cell_height(c)+48);
+            printf(" %c%c%c ", c1, c2, c3);
+        }
     }
     
 }

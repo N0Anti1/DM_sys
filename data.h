@@ -11,10 +11,10 @@
 #define DATA_H
 
 
-#define NB_HEDGEHOG 2
+#define NB_HEDGEHOG 10
 #define NB_PLAYER_MAX 26
-#define WIDTH 9             // WIDTH <= 26 
-#define HEIGHT 6
+#define WIDTH 3             // WIDTH <= 26 
+#define HEIGHT 3
 
 #define MOVE_up 'u'
 #define MOVE_down 'b'

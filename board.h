@@ -19,7 +19,7 @@ char board_peek(board_t* b, int line, int row, int pos); // pos=0 => top
 bool board_is_empty(board_t* b, int line, int row);
 bool board_is_trap(board_t* b, int line, int row);
 void board_print(board_t* b, int highlighted_line);
-
+void init_board(board_t* b, int nb_player);
 
 
 #endif

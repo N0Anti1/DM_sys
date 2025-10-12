@@ -70,6 +70,16 @@ void play_v(board_t* b, int line, int row, bool mov) {
     }
 }
 
+// ETIENNE
+// true si la ligne est vide de hérisson
+bool is_line_empty(board_t* b, int line) {
+    assert(0 <= line && line < HEIGHT);
+    for (int i = 0; i < WIDTH-1; i ++) {
+        if (board_height(b, line, i) > 0) return false;
+    }
+    return true;
+}
+
 // Il ne faudrait en théorie pas de b->...
 // Mais tu n'as pas de primitive qui te revoie le i-ème elt de hh_end
 // Donc comme c'est débile de faire une primitive juste pour ça je ne pense pas qu'on va enfaire
@@ -90,7 +100,7 @@ bool is_game_end(board_t* b) {
 
 // Tu vas avoir la deuxième place si tu es 3e et que les deux premiers font égalité
 // Peut-être qu'il faut incrémenter le rang quand on print une équipe...
-void print_classement(board_t* b) {
+void print_classement(board_t* b, int nb_player) {
     int rank = 1;
     bool print = true;
     for (int n = NB_HEDGEHOG-1; n >= 0; n-=1){
@@ -98,15 +108,15 @@ void print_classement(board_t* b) {
             printf("Place %d : ",rank);
             print = false;
         }
-        for (int i = 0; i < NB_PLAYER_MAX; i+=1){
+        for (int i = 0; i < nb_player; i+=1){
             if (b->hh_end[i]==n){
                 printf("équipe %c   ",(i+65));
                 print = true;
             }
         }
         if (print){
-            rank+=1;
             printf("(avec %d hérisson)\n",n);
+            rank+=1;
         }
     }
 }

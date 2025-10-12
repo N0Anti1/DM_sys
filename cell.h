@@ -18,7 +18,7 @@ char cell_pop(cell_t* c);
 int cell_height(cell_t* c);
 char cell_top(cell_t* c);
 char cell_peek(cell_t* c, int pos); // pos=0 => top
-void cell_print(cell_t* c, int slice);
+void cell_print(cell_t* c, int slice, bool highlighted);
 bool cell_is_trap(cell_t* c);
 
 

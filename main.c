@@ -84,12 +84,24 @@ void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
 
     if (possible_v) {
         printf("Joueur %c, que veux-tu faire ?\n", (char)(player+65));
+        if (is_line_empty(b, highlighted_line)) {
+            printf("Vous pouvez passer votre tour en entrant 'skip'\n");
+        }
     }
     else {
-        printf("Joueur %c, quel hérisson veux-tu avancer ?\n", (char)(player+65));
+        if (is_line_empty(b, highlighted_line)) {
+            printf("Vous ne pouvez pas jouer sur la ligne %d.\n", highlighted_line+1);
+            printf("Entrez qqch pour passer votre tour\n");
+            scan();
+            return;
+        }
+        printf("Joueur %c, quel hérisson veux-tu avancer (sur la ligne %d) ?\n", (char)(player+65), highlighted_line+1);
     }
 
     scan();
+    if (is_line_empty(b, highlighted_line) && strcmp(buffer, "skip") == 0) {
+        return;
+    }
     int row = (int)buffer[0]-65;
     buffer[0] = '0';
     int line = string_to_ing(buffer)-1;
@@ -123,14 +135,16 @@ void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
             play_v(b, line, row, dir == MOVE_up);
             clear_std();
             board_print(b, highlighted_line);
+            printf("Le dé à réalisé un %d\n", highlighted_line+1);
             player_turn(b, player, false, highlighted_line);
         }
         else {
-            printf("1:Tu ne peux pas faire ce coup !\n");
+            printf("Tu ne peux pas faire ce coup !\n");
             player_turn(b, player, possible_v, highlighted_line);
         }
         return;
     }
+    
     
     if (possible_v && dir != MOVE_right) {
         printf("Précisez votre direction, vous avez encore du choix !\n");
@@ -138,34 +152,43 @@ void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
         return;
     }
     
-    if (is_playable_h(b, line, row)) {
-        play_h(b, line, row);
+    if (line == highlighted_line) {
+        if (is_playable_h(b, line, row)) {
+            play_h(b, line, row);
+            return;
+        }
+    }
+    else {
+        printf("Tu dois jouer sur la ligne %d !!", highlighted_line+1);
+        player_turn(b, player, possible_v, highlighted_line);
         return;
     }
 
-    printf("2:Tu ne peux pas faire ce coup !\n");
+    printf("Tu ne peux pas faire ce coup !\n");
     player_turn(b, player, possible_v, highlighted_line);
     return;
 }
 
+
 void play_game(int nb_player) {
     board_t b = create_board();
-    // On doit initialiser le plateau (pièges, ...)
-    // On doit ajouter les hérissons
-    board_push(&b, 0, 0, 'A');
+    init_board(&b, nb_player);
+
     while(!is_game_end(&b)) {
         for (int player = 0; player < nb_player; player += 1) {
-            int line = rand() % 6 + 1;
+            int de = rand() % HEIGHT + 1;
             clear_std();
-            board_print(&b, line);
-            // On ne peut avancer que des hh de la ligne line
-            // Il faut pouvoir vérifier si un coup est possible.
-            player_turn(&b, player, true, line);
+            board_print(&b, de-1);
+            printf("Le dé à réalisé un %d\n", de);
+            player_turn(&b, player, true, de-1);
         }
     }
-    printf("Score :\n");
-    printf("Fin de la partie, entrée qqch pour continuer\n");
-    scanf("%[^\n]", buffer);
+    clear_std();
+    print_center("Fin de la partie !!!");
+    printf("\nVoici le classement :\n");
+    print_classement(&b, nb_player);
+    printf("\nEntrez qqch pour continuer\n");
+    scan();
 }
 
 
