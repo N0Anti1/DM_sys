@@ -39,7 +39,7 @@ bool is_game_end(board_t* b){
 bool verif_trap(board_t* b, int line, int row){
     if (b->board[line][row].is_trap){
         for (int i = 0; i < row; i+=1){
-            if (b->board[line][i].size != -1){return false;}
+            if (b->board[line][i].size != 0){return false;}
         }
         return true;
     }
@@ -48,18 +48,40 @@ bool verif_trap(board_t* b, int line, int row){
 
 bool is_playable_h(board_t* b, int line, int row){
     if (line < 0 || line >= nb_line || row < 0 || row >= nb_row-1){return false;}
-    return (verif_trap(b,line,row) && (b->board[line][row].size != -1));
+    return (verif_trap(b,line,row) && (b->board[line][row].size != 0));
 }
 
+// mov : true=up ; false=down
 bool is_playable_v(board_t* b, int line, int row, int player, bool mov){
     if (line < 0 || line >= nb_line || row < 0 || row >= nb_row-1){return false;}
     if ((mov && line == 0) || (!mov && line == nb_line-1)){return false;}
     cell_t c = b->board[line][row];
-    if (c.size == -1){return false;}
-    return (verif_trap(b,line,row) && c.heap[c.size]==player+96);
+    if (c.size == 0){return false;}
+    return (verif_trap(b,line,row) && c.heap[c.size-1]==player+96);
 }
 
-void main(){
-    board_t b = {.board = NULL, .hh_end = {5,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} };
-    is_game_end(&b);
+void play_h(board_t* b, int line, int row){
+    cell_t c_init = b->board[line][row];
+    cell_t c_end = b->board[line][row+1];
+    char herisson = c_init.heap[c_init.size - 1];
+    b->board[line][row].size -= 1;
+    b->board[line][row+1].size += 1;
+    b->board[line][row+1].heap[c_end.size] = herisson;
+}
+
+// mov : true=up ; false=down
+void play_v(board_t* b, int line, int row, bool mov){
+    cell_t c_init = b->board[line][row];
+    char herisson = c_init.heap[c_init.size-1];
+    b->board[line][row].size -= 1;
+    if (mov){
+        cell_t c_end = b->board[line-1][row];
+        b->board[line-1][row].size += 1;
+        b->board[line-1][row].heap[c_end.size] = herisson;
+    }
+    else{
+        cell_t c_end = b->board[line+1][row];
+        b->board[line+1][row].size += 1;
+        b->board[line+1][row].heap[c_end.size] = herisson;
+    }
 }
