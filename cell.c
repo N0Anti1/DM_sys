@@ -1,28 +1,40 @@
-#include <stdio.h>
+#include "cell.h"
 
+int cell_size = 24;
 
-typedef struct cell {
-    int i;
-} cell_t;
-
-void init_cell(cell_t* c) {
-    c->i = 2;
-}
-
-cell_t def_cell() {
-    cell_t c;
-    c.i = 1;
-    return c;
+cell_t create_cell() {
+  cell_t pile;
+  pile.heap=tab[cell_size];
+  pile.size=0;
+  pile.is_trap=false;
+  return(pile);
 }
 
 
-int main() {
+void pile_push(cell* p, char cnt){
+  p->heap[p->size]=cnt;
+  p->size++;
+}
 
-    cell_t cell;
-    init_cell(&cell);
-    cell_t cell2 = def_cell();
+char pile_pop (cell* p){
+  assert(p->size > 0);
+  p->size--;
+  char c = p->heap[p->size];
+  return(c);
+}
 
-    printf("%d\n", cell.i);
-    printf("%d\n", cell2.i);
+int pile_height(cell* p){
+  return(p->size);
+}
 
+char pile_top(cell* p){
+  assert(p->size > 0);
+  char c = p->heap[p->size - 1];
+  return(c);
+}
+
+char pile_peek(cell* p, int pos){
+  assert(p->size > pos);
+  char c = p->heap[p->size - pos - 1];
+  return(c);
 }

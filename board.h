@@ -8,7 +8,7 @@
 #define BOARD_H
 
 typedef struct board {
-    cell_t** board;
+    cell_t board[HAUTEUR][LARGEUR];
     int hh_end[26];     // Amount of hedgehog at the end of the race
 } board_t;
 
