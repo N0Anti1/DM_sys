@@ -74,9 +74,9 @@ void board_print(board_t* b, int highlighted_line) {
         }
 
         else if (line < HEIGHT) {
-          if (row == -1 && slice == 1) printf("line ");
-          else if (row == -1 && slice == 2) printf("  %d  ", line+1);
-          else if (row == -1) printf("     ");
+          if (row == -1 && slice == 1) printf("line%c", highlighted_line == line ? '>' : ' ');
+          else if (row == -1 && slice == 2) printf("  %d %c", line+1, highlighted_line == line ? '>' : ' ');
+          else if (row == -1) printf("    %c", highlighted_line == line ? '>' : ' ');
           else {
             printf(" ");
             cell_print(&(b->board[line][row]), slice);
@@ -95,13 +95,4 @@ void board_print(board_t* b, int highlighted_line) {
       printf("\n");
     }
   }
-}
-
-int main() {
-
-  board_t b = create_board();
-  b.board[1][1].is_trap = true;
-  board_print(&b, 2);
-
-  return 0;
 }

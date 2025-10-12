@@ -25,7 +25,7 @@ bool is_playable_h(board_t* b, int line, int row){
 // Tu n'utilises pas du tout les primitives !!!!
 // Tu n'as 'pas le droit' d'utiliser le type cell_t
 // mov : true=up ; false=down
-bool is_playable_v(board_t* b, int line, int row, int player, bool mov){
+bool is_playable_v2(board_t* b, int line, int row, int player, bool mov){
     if (line < 0 || line >= HEIGHT || row < 0 || row >= WIDTH-1){return false;}
     if ((mov && line == 0) || (!mov && line == HEIGHT-1)){return false;}
     cell_t c = b->board[line][row];
@@ -33,7 +33,7 @@ bool is_playable_v(board_t* b, int line, int row, int player, bool mov){
     return (verif_trap(b,line,row) && c.heap[c.size-1]==player+96);
 }
 // Exemple :
-bool is_playable_v2(board_t* b, int line, int row, int player, bool mov) {
+bool is_playable_v(board_t* b, int line, int row, int player, bool mov) {
     if (line < 0 || line >= HEIGHT || row < 0 || row >= WIDTH-1) return false;
     if ((mov && line == 0) || (!mov && line == HEIGHT-1)) return false;
     if (board_height(b, line, row) == 0) return false;

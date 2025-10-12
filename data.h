@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 #include <sys/ioctl.h>
 
 
@@ -12,15 +13,15 @@
 
 #define NB_HEDGEHOG 2
 #define NB_PLAYER_MAX 26
-#define WIDTH 9
+#define WIDTH 9             // WIDTH <= 26 
 #define HEIGHT 6
 
-// const char MOVE_up = 'u';
-// const char MOVE_down = 'b';
-// const char MOVE_right = 'd';
-// const char* MOVE_tutorial = "t";
-// const char* MOVE_rules = "r";
-// const char* MOVE_option = "o";
+#define MOVE_up 'u'
+#define MOVE_down 'b'
+#define MOVE_right 'd'
+#define MOVE_tutorial "t"
+#define MOVE_rules "r"
+#define MOVE_option "o"
 
 
 #endif
