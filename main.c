@@ -159,7 +159,7 @@ void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
         }
     }
     else {
-        printf("Tu dois jouer sur la ligne %d !!", highlighted_line+1);
+        printf("Tu dois jouer sur la ligne %d !!\n", highlighted_line+1);
         player_turn(b, player, possible_v, highlighted_line);
         return;
     }
@@ -176,11 +176,11 @@ void play_game(int nb_player) {
 
     while(!is_game_end(&b)) {
         for (int player = 0; player < nb_player; player += 1) {
-            int de = rand() % HEIGHT + 1;
+            int de = rand() % HEIGHT;
             clear_std();
-            board_print(&b, de-1);
-            printf("Le dé à réalisé un %d\n", de);
-            player_turn(&b, player, true, de-1);
+            board_print(&b, de);
+            printf("Le dé à réalisé un %d\n", de+1);
+            player_turn(&b, player, true, de);
         }
     }
     clear_std();

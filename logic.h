@@ -13,8 +13,9 @@ bool is_playable_v(board_t* b, int line, int row, int player, bool mov);    // m
 void play_h(board_t* b, int line, int row);
 void play_v(board_t* b, int line, int row, bool mov);
 
-bool is_line_empty(board_t* b, int line);   // à faire
+bool is_line_empty(board_t* b, int line);
 bool is_game_end(board_t* b);
+
 void print_classement(board_t* b, int nb_player);
 
 #endif
