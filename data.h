@@ -11,7 +11,7 @@
 #define DATA_H
 
 
-#define NB_HEDGEHOG 10
+#define NB_HEDGEHOG 2
 #define NB_PLAYER_MAX 26
 #define WIDTH 3             // WIDTH <= 26 
 #define HEIGHT 3
@@ -22,6 +22,7 @@
 #define MOVE_tutorial "t"
 #define MOVE_rules "r"
 #define MOVE_option "o"
+
 
 
 #endif

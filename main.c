@@ -1,8 +1,8 @@
 #include "logic.h"
 
 
-static char buffer[100];
-static char trash[100];
+static char buffer[10];
+static char trash[10];
 static struct winsize w;
 
 
@@ -67,7 +67,7 @@ void print_rules() {
 // return -1 if (s != int)
 int string_to_ing(char* s) {
     int res = 0;
-    for (int i = 0; i < strlen(s); i += 1) {
+    for (int i = 0; i < (int)strlen(s); i += 1) {
         if (48 <= (int)s[i] && (int)s[i] <= 57) {
             res *= 10;
             res += (int)s[i]-48;
@@ -226,7 +226,6 @@ int main() {
             running = false;
         }
     }
-    
 
     return 0;
 }
