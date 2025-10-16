@@ -1,2 +1,6 @@
 # DM_sys
-DM1 sys, en collaboration avec LEGRAND Elisa et LESHERME Etienne
+DM1 sys
+Réalisé en collaboration avec :
+- CARREZ Antoine
+- LEGRAND Elisa
+- LASHERME Etienne

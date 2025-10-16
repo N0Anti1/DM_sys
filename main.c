@@ -23,6 +23,25 @@ void clear_std() {
         system("cls");
     }
 }
+int min(int a, int b) {
+    return b < a ? b : a;
+}
+
+// return -1 if (s != int)
+int string_to_ing(char* s) {
+    int res = 0;
+    for (int i = 0; i < (int)strlen(s); i += 1) {
+        if (48 <= (int)s[i] && (int)s[i] <= 57) {
+            res *= 10;
+            res += (int)s[i]-48;
+        }
+        else {
+            return -1;
+        }
+    }
+    return res;
+}
+
 
 void print_center(char* text) {
     ioctl(0, TIOCGWINSZ, &w);
@@ -63,24 +82,68 @@ void print_rules() {
     scan();
 }
 
+void print_option(int* nb_bot) {
+    clear_std();
+    print_center("Igel Ärgern");
+    print_center("OPTION");
+    printf("\nVoici les commandes :\n");
+    printf("Déplacement vers le haut : '%c'\n", MOVE_up);
+    printf("Déplacement vers le bas : '%c'\n", MOVE_down);
+    printf("Déplacement vers la droite : '%c'\n", MOVE_right);
+    printf("\n\nNombre de bot : %d\n", *nb_bot);
+    printf("Pour changer ce nombre, veuillez entrer 'bot n' avec n<%d le nombre de bot souhaité\n", NB_PLAYER_MAX);
+    printf("\n\nPour quitter les options, entrez qqch.\n");
 
-// return -1 if (s != int)
-int string_to_ing(char* s) {
-    int res = 0;
-    for (int i = 0; i < (int)strlen(s); i += 1) {
-        if (48 <= (int)s[i] && (int)s[i] <= 57) {
-            res *= 10;
-            res += (int)s[i]-48;
+    scan();
+    if (strcmp(buffer, "bot") == 0) {
+        int n = string_to_ing(&(trash[1]));
+        if (0 <= n && n < NB_PLAYER_MAX) {
+            *nb_bot = n;
         }
-        else {
-            return -1;
-        }
+        print_option(nb_bot);
     }
-    return res;
+}
+// true if the game is aborted
+bool print_option_ingame() {
+    clear_std();
+    print_center("Igel Ärgern");
+    print_center("OPTION");
+    printf("\nVoici les commandes :\n");
+    printf("Déplacement vers le haut : '%c'\n", MOVE_up);
+    printf("Déplacement vers le bas : '%c'\n", MOVE_down);
+    printf("Déplacement vers la droite : '%c'\n", MOVE_right);
+    printf("\n\nPour arrêter la partie, entrez 'quit'.\n");
+    printf("Pour quitter les options, entrez qqch.\n");
+    scan();
+    if (strcmp(buffer, "quit") == 0) return true;
+    return false;
 }
 
 
-void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) {
+bool check_input(bool possible_v, int line, int* row, char dir) {
+    // Check if the cell [line,row] exist
+    if (*row < 0 || *row >= WIDTH || line < 0 || line >= HEIGHT) {
+        // Check if the row input is in lowercase
+        if (line >= 0 && line < HEIGHT && *row >= 32 && *row < WIDTH+32) *row -= 32;
+        else {
+            printf("La case n'existe pas !\n");
+        return false;
+        }
+    }
+    // Check if the entry is correct
+    if (strlen(trash) != 2) {
+        printf("L'entrée est incorrecte, regardez le tutoriel !\n");
+        return false;
+    }
+    // Check if the move is possible
+    if (!possible_v && (dir == MOVE_up || dir == MOVE_down)) {
+        printf("Tu ne peux plus jouer en vertical !!\n");
+        return false;
+    }
+    return true;
+}
+// return false only if the game is stop
+bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) {
 
     if (possible_v) {
         printf("Joueur %c, que veux-tu faire ?\n", (char)(player+65));
@@ -93,84 +156,86 @@ void player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
             printf("Vous ne pouvez pas jouer sur la ligne %d.\n", highlighted_line+1);
             printf("Entrez qqch pour passer votre tour\n");
             scan();
-            return;
+            return true;
         }
         printf("Joueur %c, quel hérisson veux-tu avancer (sur la ligne %d) ?\n", (char)(player+65), highlighted_line+1);
     }
 
     scan();
     if (is_line_empty(b, highlighted_line) && strcmp(buffer, "skip") == 0) {
-        return;
+        return true;
     }
     int row = (int)buffer[0]-65;
     buffer[0] = '0';
     int line = string_to_ing(buffer)-1;
     char dir = trash[1];
-    
-    // Check if the cell [line,row] exist
-    if (row < 0 || row >= WIDTH || line < 0 || line >= HEIGHT) {
-        // Check if the row input is in lowercase
-        if (line >= 0 && line < HEIGHT && row >= 32 && row < WIDTH+32) row -= 32;
-        else {
-            printf("La case n'existe pas !\n");
-            player_turn(b, player, possible_v, highlighted_line);
-            return;
+
+    // Check if 'option' is selected
+    if (row+65 == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+        bool quit = print_option_ingame();
+        printf("bool=%d\n", quit);
+        if (!quit) {
+            printf("Donc on a : %d\n", quit);
+            clear_std();
+            board_print(b, highlighted_line);
+            printf("Le dé à réalisé un %d\n", highlighted_line+1);
+            return player_turn(b, player, possible_v, highlighted_line);
         }
+        return false;
     }
-    // Check if the entry is correct
-    if (strlen(trash) != 2) {
-        printf("L'entrée est incorrecte, regardez le tutoriel !\n");
-        player_turn(b, player, possible_v, highlighted_line);
-        return;
+    // Check if 'tuto' is selected
+    else if (row+65 == (int)'t' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+        print_tutorial();
+        clear_std();
+        board_print(b, highlighted_line);
+        printf("Le dé à réalisé un %d\n", highlighted_line+1);
+        return player_turn(b, player, possible_v, highlighted_line);
     }
-    // Check if the move is possible
-    if (!possible_v && (dir == MOVE_up || dir == MOVE_down)) {
-        printf("Tu ne peux plus jouer en vertical !!\n");
-        player_turn(b, player, possible_v, highlighted_line);
-        return;
+    
+    // Check if the input is correct
+    if (!check_input(possible_v, line, &row, dir)) {
+        return player_turn(b, player, possible_v, highlighted_line);
     }
 
+    // If it's a vertical move
     if (dir == MOVE_up || dir == MOVE_down) {
         if (is_playable_v(b, line, row, player, dir == MOVE_up)) {
             play_v(b, line, row, dir == MOVE_up);
             clear_std();
             board_print(b, highlighted_line);
             printf("Le dé à réalisé un %d\n", highlighted_line+1);
-            player_turn(b, player, false, highlighted_line);
+            return player_turn(b, player, false, highlighted_line);
         }
         else {
             printf("Tu ne peux pas faire ce coup !\n");
-            player_turn(b, player, possible_v, highlighted_line);
+            return player_turn(b, player, possible_v, highlighted_line);
         }
-        return;
     }
-    
-    
+
     if (possible_v && dir != MOVE_right) {
         printf("Précisez votre direction, vous avez encore du choix !\n");
-        player_turn(b, player, possible_v, highlighted_line);
-        return;
+        return player_turn(b, player, possible_v, highlighted_line);
     }
     
+    // If it's a horizontal move
     if (line == highlighted_line) {
         if (is_playable_h(b, line, row)) {
             play_h(b, line, row);
-            return;
+            return true;
         }
     }
     else {
         printf("Tu dois jouer sur la ligne %d !!\n", highlighted_line+1);
-        player_turn(b, player, possible_v, highlighted_line);
-        return;
+        return player_turn(b, player, possible_v, highlighted_line);
     }
 
+    // It's not a legal move :
     printf("Tu ne peux pas faire ce coup !\n");
-    player_turn(b, player, possible_v, highlighted_line);
-    return;
+    return player_turn(b, player, possible_v, highlighted_line);
 }
 
 
-void play_game(int nb_player) {
+void play_game(int nb_player, int nb_bot) {
     board_t b = create_board();
     init_board(&b, nb_player);
 
@@ -180,9 +245,18 @@ void play_game(int nb_player) {
             clear_std();
             board_print(&b, de);
             printf("Le dé à réalisé un %d\n", de+1);
-            player_turn(&b, player, true, de);
+            // condition fail if the game continue
+            if (!player_turn(&b, player, true, de)) {
+                printf("FIN\n");
+                goto endGame;
+            }
+            printf("Pas fin\n");
+        }
+        for (int bot = 0; bot < nb_bot; bot += 1) {
+            
         }
     }
+    endGame:
     clear_std();
     print_center("Fin de la partie !!!");
     printf("\nVoici le classement :\n");
@@ -197,6 +271,8 @@ int main() {
 
     bool running = true;
 
+    int nb_bot = 0;
+
     while (running)
     {
         clear_std();
@@ -205,7 +281,7 @@ int main() {
         printf("\n\n\n");
         print_center("BIENVENUE sur le jeu Igel Ärgern");
         print_center("Le jeu de course de hérisson !!\n");
-        printf("Jouer (entrez le nombre de joueur [2-26])\n");
+        printf("Jouer (entrez le nombre de joueur [%d-%d])\n", nb_bot==0 ? 2 : 1, NB_PLAYER_MAX-nb_bot);
         printf("Tutoriel ('%s')\n", MOVE_tutorial);
         printf("Règles ('%s')\n", MOVE_rules);
         printf("Quitter ('q')\n");
@@ -219,8 +295,11 @@ int main() {
         else if (strcmp(buffer, MOVE_rules) == 0) {
             print_rules();
         }
-        else if (2 <= nb_player && nb_player <= 26) {
-            play_game(nb_player);
+        else if (strcmp(buffer, MOVE_option) == 0) {
+            print_option(&nb_bot);
+        }
+        else if (2-min(1,nb_bot) <= nb_player && nb_player <= NB_PLAYER_MAX-nb_bot) {
+            play_game(nb_player, nb_bot);
         }
         else {
             running = false;

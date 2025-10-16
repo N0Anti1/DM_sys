@@ -10,8 +10,8 @@ board_t create_board() {
     {0, 0, 0, 0, 0, 1, 0, 0, 0}, 
     {0, 0, 0, 1, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 1, 0}
-  }
-};
+  };
+
   for(int i = 0; i < HEIGHT; i++){
     for(int j = 0; j < WIDTH; j++){
       b.board[i][j] = create_cell();
@@ -68,6 +68,7 @@ bool board_is_trap(board_t* b, int line, int row){
 
 
 void board_print(board_t* b, int highlighted_line) {
+  printf("option : 'o'\t\ttuto : 't'\n");
   for (int line = -1; line <= HEIGHT; line += 1) {
     for (int slice = 0; slice < 4; slice += 1) {
       for (int row = -1; row < WIDTH; row += 1) {
