@@ -1,8 +1,9 @@
 #include "board.h"
 
 
-board_t create_board() {
+board_t create_board(float trap, float wall) {
   board_t  b;
+<<<<<<< HEAD
   int initial_board[6][9] = {
     {0, 0, 1, 0, 0, 0, 0, 0, 0}, 
     {0, 0, 0, 0, 0, 0, 1, 0, 0}, 
@@ -12,27 +13,67 @@ board_t create_board() {
     {0, 0, 0, 0, 0, 0, 0, 1, 0}
   };
 
+=======
+  //Initialises the board's tiles
+  float random;
+>>>>>>> 20b70b9 (ajout des murs)
   for(int i = 0; i < HEIGHT; i++){
     for(int j = 0; j < WIDTH; j++){
       b.board[i][j] = create_cell();
-      b.board[i][j].is_trap = initial_board[i][j];
+      random = rand() / (float)RAND_MAX;
+      if(random < trap && j > 0 && j < WIDTH - 1) {
+        b.board[i][j].type = TRAP;
+      }
+      else if(random < trap + wall && j > 0) {
+        b.board[i][j].type = WALL;
+      }
     }
   }
+  //Checks whether whole a row is a continuous wall and leaves a spaces if that's the case
+  bool check = true;
+  int hole;
+  for(int j = 0; j < WIDTH; j++){
+    check = true;
+    for(int i = 0; i < HEIGHT; i++){
+      if(check){
+        check = b.board[i][j].type == WALL;
+      }
+    }
+    if(check) {
+      hole = rand() % HEIGHT;
+      b.board[hole][j].type = BLANK;
+    }
+  }
+
+  //Initialises the players' scores
   for(int i = 0; i < NB_PLAYER_MAX; i++){
     b.hh_end[i] = 0;
   }
   return(b);
 }
 
+//Ajoute les hérisson à leur position de départ de manière aléatoire
 void init_board(board_t* b, int nb_player) {
-
-  // Ajoute les joueurs
-  for (int i = 0; i < NB_HEDGEHOG; i++) {
-    for (int n = nb_player-1; n >= 0; n -= 1) {
-      board_push(b, rand() % HEIGHT, 0, (char)(n+65));
-    }
-  }
+ int hh_count[NB_PLAYER_MAX]; //tableau donnant le nombre de hérisson restant à placer par joueur
+ for(int i = 0 ; i < nb_player ; i++){ //initialisation de ce tableau
+   hh_count[i] = NB_HEDGEHOG;
+ }
+ int next_hh_placed;
+ int next_line;
+ for(int i = 0 ; i < (nb_player * NB_HEDGEHOG) ; i++){
+   next_hh_placed = rand() % nb_player; //le prochain hérisson à être placé appartient au joueur nhp
+   next_line = rand() % HEIGHT; //le prochain hérisson sera placé sur la ligne nl
+   while(hh_count[next_hh_placed] == 0) { //gère le cas où le joueur à ajouter a déjà tous ses hérissons de placés
+    next_hh_placed++; 
+    if(next_hh_placed == nb_player) {
+       next_hh_placed = 0;
+     }
+   }
+   hh_count[next_hh_placed]--; //décrémente le nombre de hérisson à placer pour le joueur nhp
+   board_push(b, next_line, 0, (char) next_hh_placed+65); //place le hérisson du joueur nhp sur la ligne nl de la première colonne
+ }
 }
+
 
 
 void board_push(board_t* b, int line, int row, char ctn) {
@@ -65,6 +106,10 @@ bool board_is_trap(board_t* b, int line, int row){
   assert(0 <= row && row < WIDTH && 0 <= line && line < HEIGHT);
   return(cell_is_trap(&(b->board[line][row])));
 }
+bool board_has_wall(board_t* b, int line, int row){
+  assert(0 <= row && row < WIDTH && 0 <= line && line < HEIGHT);
+  return(cell_has_wall(&(b->board[line][row])));
+}
 
 
 void board_print(board_t* b, int highlighted_line) {
@@ -88,7 +133,7 @@ void board_print(board_t* b, int highlighted_line) {
           else if (row == -1 && slice == 2) printf("  %d %c", line+1, highlighted_line == line ? '>' : ' ');
           else if (row == -1) printf("    %c", highlighted_line == line ? '>' : ' ');
           else {
-            printf(" ");
+            printf("%s", board_has_wall(b, line, row) ? "▒" : " ");
             cell_print(&(b->board[line][row]), slice, highlighted_line == line);
             printf(" ");
           }

@@ -175,7 +175,11 @@ void board_print_bot(board_t* b, bot_t* ia, bool dir) {
             if (slice == 1 && ia->played_move[1][0] == row-1 && ia->played_move[1][1] == line) {
                 printf(">");
             }
+<<<<<<< HEAD
             else printf(" ");
+=======
+            printf("%s", board_has_wall(b, line, row) ? "▒" : " ");
+>>>>>>> 20b70b9 (ajout des murs)
             if (ia->played_move[0][0] == row && ia->played_move[0][1] == line) {
                 cell_print_bot(&(b->board[line][row]), slice, true, dir, ia->played_move[0][1] == line);
             }

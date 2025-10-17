@@ -129,6 +129,7 @@ bool check_input(bool possible_v, int line, int* row, char dir) {
         else {
             printf("La case n'existe pas !\n");
         return false;
+<<<<<<< HEAD
         }
     }
     // Check if the entry is correct
@@ -180,6 +181,76 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
             board_print(b, highlighted_line);
             printf("Le dé à réalisé un %d\n", highlighted_line+1);
             return player_turn(b, player, possible_v, highlighted_line);
+=======
+>>>>>>> 20b70b9 (ajout des murs)
+        }
+        return false;
+    }
+<<<<<<< HEAD
+    // Check if 'tuto' is selected
+    else if (row+65 == (int)'t' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+        print_tutorial();
+        clear_std();
+        board_print(b, highlighted_line);
+        printf("Le dé à réalisé un %d\n", highlighted_line+1);
+        return player_turn(b, player, possible_v, highlighted_line);
+    }
+    
+    // Check if the input is correct
+    if (!check_input(possible_v, line, &row, dir)) {
+        return player_turn(b, player, possible_v, highlighted_line);
+    }
+
+=======
+    // Check if the entry is correct
+    if (strlen(trash) != 2) {
+        printf("L'entrée est incorrecte, regardez le tutoriel !\n");
+        return false;
+    }
+    // Check if the move is possible
+    if (!possible_v && (dir == MOVE_up || dir == MOVE_down)) {
+        printf("Tu ne peux plus jouer en vertical !!\n");
+        return false;
+    }
+    return true;
+}
+// return false only if the game is stop
+bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) {
+
+    if (possible_v) {
+        printf("Joueur %c, que veux-tu faire ?\n", (char)(player+65));
+        if (is_line_clear(b, highlighted_line)) {
+            printf("Vous pouvez passer votre tour en entrant 'skip'\n");
+        }
+    }
+    else {
+        if (is_line_clear(b, highlighted_line)) {
+            printf("Vous ne pouvez pas jouer sur la ligne %d.\n", highlighted_line+1);
+            printf("Entrez qqch pour passer votre tour\n");
+            scan();
+            return true;
+        }
+        printf("Joueur %c, quel hérisson veux-tu avancer (sur la ligne %d) ?\n", (char)(player+65), highlighted_line+1);
+    }
+
+    scan();
+    if (is_line_clear(b, highlighted_line) && strcmp(buffer, "skip") == 0) {
+        return true;
+    }
+    int row = (int)buffer[0]-65;
+    buffer[0] = '0';
+    int line = string_to_ing(buffer)-1;
+    char dir = trash[1];
+
+    // Check if 'option' is selected
+    if (row+65 == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+        bool quit = print_option_ingame();
+        if (!quit) {
+            printf("Donc on a : %d\n", quit);
+            clear_std();
+            board_print(b, highlighted_line);
+            printf("Le dé à réalisé un %d\n", highlighted_line+1);
+            return player_turn(b, player, possible_v, highlighted_line);
         }
         return false;
     }
@@ -197,6 +268,7 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
         return player_turn(b, player, possible_v, highlighted_line);
     }
 
+>>>>>>> 20b70b9 (ajout des murs)
     // If it's a vertical move
     if (dir == MOVE_up || dir == MOVE_down) {
         if (is_playable_v(b, line, row, player, dir == MOVE_up)) {
@@ -236,7 +308,11 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
 
 
 void play_game(int nb_player, int nb_bot) {
+<<<<<<< HEAD
     board_t b = create_board();
+=======
+    board_t b = create_board(0,1);
+>>>>>>> 20b70b9 (ajout des murs)
     init_board(&b, nb_player+nb_bot);
 
     bot_t bots[NB_PLAYER_MAX];

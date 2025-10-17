@@ -4,7 +4,7 @@
 cell_t create_cell() {
   cell_t c;
   c.size = 0;
-  c.is_trap = false;
+  c.type = BLANK;
   return(c);
 }
 
@@ -34,11 +34,13 @@ char cell_peek(cell_t* c, int pos) {
   return(c->heap[c->size - pos - 1]);
 }
 
-
 bool cell_is_trap(cell_t* c) {
-    return c->is_trap;
+    return c->type == TRAP;
 }
 
+bool cell_has_wall(cell_t* c) {
+    return c->type == WALL;
+}
 
 void cell_print(cell_t* c, int slice, bool highlighted) {
     if (slice == 0) {

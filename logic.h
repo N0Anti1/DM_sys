@@ -5,7 +5,7 @@
 #define LOGIC_H
 
 // Return true if the hh is not trap
-bool verif_trap(board_t* b, int line, int row);
+bool verif_not_traped(board_t* b, int line, int row);
 // Check if a move is possible
 bool is_playable_h(board_t* b, int line, int row);
 bool is_playable_v(board_t* b, int line, int row, int player, bool mov);    // mov : true=up ; false=down
@@ -13,7 +13,11 @@ bool is_playable_v(board_t* b, int line, int row, int player, bool mov);    // m
 void play_h(board_t* b, int line, int row);
 void play_v(board_t* b, int line, int row, bool mov);
 
+<<<<<<< HEAD
 bool is_line_empty(board_t* b, int line);
+=======
+bool is_line_clear(board_t* b, int line);
+>>>>>>> 20b70b9 (ajout des murs)
 bool is_game_end(board_t* b);
 
 void print_classement(board_t* b, int nb_player);

@@ -11,7 +11,11 @@
 #define DATA_H
 
 
+<<<<<<< HEAD
 #define NB_HEDGEHOG 201
+=======
+#define NB_HEDGEHOG 150
+>>>>>>> 20b70b9 (ajout des murs)
 #define NB_PLAYER_MAX 26
 #define WIDTH 9             // WIDTH <= 26 
 #define HEIGHT 6
