@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
 
 # Fichiers source
-SRCS = main.c logic.c board.c cell.c
+SRCS = main.c logic.c board.c cell.c bot.c
 OBJS = $(SRCS:.c=.o)
 
 # Règle par défaut

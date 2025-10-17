@@ -1,4 +1,5 @@
 #include "logic.h"
+#include "bot.h"
 
 
 static char buffer[10];
@@ -91,13 +92,13 @@ void print_option(int* nb_bot) {
     printf("Déplacement vers le bas : '%c'\n", MOVE_down);
     printf("Déplacement vers la droite : '%c'\n", MOVE_right);
     printf("\n\nNombre de bot : %d\n", *nb_bot);
-    printf("Pour changer ce nombre, veuillez entrer 'bot n' avec n<%d le nombre de bot souhaité\n", NB_PLAYER_MAX);
+    printf("Pour changer ce nombre, veuillez entrer 'bot n' avec n<=%d le nombre de bot souhaité\n", NB_PLAYER_MAX);
     printf("\n\nPour quitter les options, entrez qqch.\n");
 
     scan();
     if (strcmp(buffer, "bot") == 0) {
         int n = string_to_ing(&(trash[1]));
-        if (0 <= n && n < NB_PLAYER_MAX) {
+        if (0 <= n && n <= NB_PLAYER_MAX) {
             *nb_bot = n;
         }
         print_option(nb_bot);
@@ -173,7 +174,6 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
     // Check if 'option' is selected
     if (row+65 == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
         bool quit = print_option_ingame();
-        printf("bool=%d\n", quit);
         if (!quit) {
             printf("Donc on a : %d\n", quit);
             clear_std();
@@ -237,7 +237,13 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
 
 void play_game(int nb_player, int nb_bot) {
     board_t b = create_board();
-    init_board(&b, nb_player);
+    init_board(&b, nb_player+nb_bot);
+
+    bot_t bots[NB_PLAYER_MAX];
+    for (int i = 0; i < nb_bot; i += 1) {
+        bots[i] = init_bot(nb_player+i);
+    }
+
 
     while(!is_game_end(&b)) {
         for (int player = 0; player < nb_player; player += 1) {
@@ -247,20 +253,26 @@ void play_game(int nb_player, int nb_bot) {
             printf("Le dé à réalisé un %d\n", de+1);
             // condition fail if the game continue
             if (!player_turn(&b, player, true, de)) {
-                printf("FIN\n");
                 goto endGame;
             }
-            printf("Pas fin\n");
         }
-        for (int bot = 0; bot < nb_bot; bot += 1) {
-            
+        for (int ia = 0; ia < nb_bot; ia += 1) {
+            int de = rand() % HEIGHT;
+            clear_std();
+            // board_print(&b, de);
+            board_print_bot(&b, &(bots[ia]), bot_turn(&(bots[ia]), &b, de));
+            printf("Entrez qqch pour continuer\n");
+            // scan();
+            if (buffer[0] == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+                if (print_option_ingame()) goto endGame;
+            }
         }
     }
     endGame:
     clear_std();
     print_center("Fin de la partie !!!");
     printf("\nVoici le classement :\n");
-    print_classement(&b, nb_player);
+    print_classement(&b, nb_player + nb_bot);
     printf("\nEntrez qqch pour continuer\n");
     scan();
 }
@@ -281,7 +293,7 @@ int main() {
         printf("\n\n\n");
         print_center("BIENVENUE sur le jeu Igel Ärgern");
         print_center("Le jeu de course de hérisson !!\n");
-        printf("Jouer (entrez le nombre de joueur [%d-%d])\n", nb_bot==0 ? 2 : 1, NB_PLAYER_MAX-nb_bot);
+        printf("Jouer (entrez le nombre de joueur [%d-%d])\n", 2-min(2,nb_bot), NB_PLAYER_MAX-nb_bot);
         printf("Tutoriel ('%s')\n", MOVE_tutorial);
         printf("Règles ('%s')\n", MOVE_rules);
         printf("Quitter ('q')\n");
@@ -298,7 +310,7 @@ int main() {
         else if (strcmp(buffer, MOVE_option) == 0) {
             print_option(&nb_bot);
         }
-        else if (2-min(1,nb_bot) <= nb_player && nb_player <= NB_PLAYER_MAX-nb_bot) {
+        else if (2-min(2,nb_bot) <= nb_player && nb_player <= NB_PLAYER_MAX-nb_bot) {
             play_game(nb_player, nb_bot);
         }
         else {

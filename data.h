@@ -11,7 +11,7 @@
 #define DATA_H
 
 
-#define NB_HEDGEHOG 4
+#define NB_HEDGEHOG 201
 #define NB_PLAYER_MAX 26
 #define WIDTH 9             // WIDTH <= 26 
 #define HEIGHT 6

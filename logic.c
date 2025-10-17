@@ -3,7 +3,7 @@
 
 
 bool verif_trap(board_t* b, int line, int row){
-    if (board_is_trap(b, line, row)){
+    if (board_is_trap(b, line, row) && board_height(b, line, row) == 1) {
         for (int i = 0; i < row; i+=1){
             if (board_height(b, line, i) != 0) {return false;}
         }
