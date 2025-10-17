@@ -68,11 +68,9 @@ bool is_game_end(board_t* b) {
 }
 
 
-void print_classement(board_t* b, int nb_player){
-void print_classement(board_t* b, int nb_player){
+void print_classement(board_t* b, int nb_player) {
     int rank = 1;
     bool print = true;
-    for (int n = NB_HEDGEHOG-1; n >= 0 && rank <= nb_player; n-=1){
     for (int n = NB_HEDGEHOG-1; n >= 0 && rank <= nb_player; n-=1){
         if (print){
             printf("- Place #%d :",rank);
@@ -82,13 +80,10 @@ void print_classement(board_t* b, int nb_player){
             if (b->hh_end[i]==n){
                 printf("%s équipe %c", print ? "," : "", (i+65));
                 rank+=1;
-                printf("%s équipe %c", print ? "," : "", (i+65));
-                rank+=1;
                 print = true;
             }
         }
         if (print){
-            printf("\t(avec %d hérisson)\n",n);
             printf("\t(avec %d hérisson)\n",n);
         }
     }
