@@ -26,6 +26,7 @@ bool is_playable_v(board_t* b, int line, int row, int player, bool mov) {
 }
 
 
+
 void play_h(board_t* b, int line, int row) {
     assert(line >= 0 && line < get_height(b) && row >= 0 && row < get_width(b)-1);
     char player = board_pop(b, line, row);
@@ -79,3 +80,4 @@ void print_classement(board_t* b, int nb_player) {
         }
     }
 }
+

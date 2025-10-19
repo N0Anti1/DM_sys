@@ -19,7 +19,7 @@ bot_t init_bot(int player);
 void playable_moves_v(bot_t* ia, board_t* b, bool mov);
 void playable_moves_h(bot_t* ia, board_t* b, int line);
 
-// Return true if a move is play
+// Return true if a move was played
 bool play_bot_v(bot_t* ia, board_t* b, bool mov);
 void play_bot_h(bot_t* ia, board_t* b, int line);
 

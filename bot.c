@@ -93,41 +93,9 @@ void cell_print_bot(cell_t* c, int slice, bool mov, bool dir, bool start) {
     }
     else if (slice == 1) {  // Same code as cell_print
         cell_print(c, slice, false);
-        // if (cell_is_trap(c)) printf(">");
-        // else printf("|");
-        // if (cell_height(c) > 0) {
-        //     printf("%c%c%c", cell_top(c), cell_top(c), cell_top(c));
-        // }
-        // else {
-        //     printf("   ");
-        // }
-        // if (cell_is_trap(c)) printf("<");
-        // else printf("|");
     }
     else if (slice == 2) {  // Same code as cell_print
         cell_print(c, slice, false);
-        // if (cell_is_trap(c)) printf(">");
-        // else printf("|");
-
-        // if (cell_height(c) == 0) {
-        //     printf("   ");
-        // }
-        // else if (cell_height(c) == 1) {
-        //     printf("%c%c%c", cell_top(c), cell_top(c), cell_top(c));
-        // }
-        // else if (cell_height(c) == 2) {
-        //     // +32 to have lowercase
-        //     printf("%c%c%c", cell_peek(c, 1)+32, cell_peek(c, 1)+32, cell_peek(c, 1)+32);
-        // }
-        // else if (cell_height(c) == 3) {
-        //     printf("%c %c", cell_peek(c, 1)+32, cell_peek(c, 2)+32);
-        // }
-        // else if (cell_height(c) >= 4) {
-        //     printf("%c%c%c", cell_peek(c, 1)+32, cell_peek(c, 2)+32, cell_peek(c, 3)+32);
-        // }
-
-        // if (cell_is_trap(c)) printf("<");
-        // else printf("|");
     }    
     else if (slice == 3) {  // Same code as cell_print with arrow to show the bot move
         char c1 = '-', c2 = '-', c3 = '-';

@@ -240,7 +240,7 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
         if (!quit) {
             clear_std();
             board_print(b, highlighted_line);
-            printf("Le dé à réalisé un %d\n", highlighted_line+1);
+            printf("Le dé à réalisé un %d\n", highlighted_line + 1);
             return player_turn(b, player, possible_v, highlighted_line);
         }
         return false;
@@ -254,7 +254,7 @@ bool player_turn(board_t* b, int player, bool possible_v, int highlighted_line) 
         return player_turn(b, player, possible_v, highlighted_line);
     }
     
-    // Check if the input is not correct
+    // Check if the input is correct
     if (!check_input(b, possible_v, line, &row, dir)) {
         return player_turn(b, player, possible_v, highlighted_line);
     }

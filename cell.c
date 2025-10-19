@@ -105,3 +105,4 @@ void cell_print(cell_t* c, int slice, bool highlighted) {
         printf(" %c%c%c ", c1, c2, c3);
     }
 }
+

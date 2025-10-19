@@ -84,6 +84,7 @@ int get_nb_hedgehog(board_t* b) {
 }
 
 
+
 void board_push(board_t* b, int line, int row, char ctn) {
   assert(0 <= row && row < b->width && 0 <= line && line < b->height);
   cell_push(&(b->board[line][row]), ctn);
