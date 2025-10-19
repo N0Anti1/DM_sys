@@ -2,41 +2,45 @@
 
 
 cell_t create_cell() {
-  cell_t c;
-  c.size = 0;
-  c.is_trap = false;
-  return(c);
+    cell_t c;
+    c.size = 0;
+    c.type = BLANK;
+    return (c);
 }
 
 
 void cell_push(cell_t* c, char ctn) {
-  c->heap[c->size] = ctn;
-  c->size++;
+    c->heap[c->size] = ctn;
+    c->size++;
 }
 
 char cell_pop(cell_t* c) {
-  assert(c->size > 0);
-  c->size--;
-  return(c->heap[c->size]);
+    assert(c->size > 0);
+    c->size--;
+    return (c->heap[c->size]);
 }
 
 int cell_height(cell_t* c) {
-  return(c->size);
+    return (c->size);
 }
 
 char cell_top(cell_t* c) {
-  assert(c->size > 0);
-  return(c->heap[c->size - 1]);
+    assert(c->size > 0);
+    return (c->heap[c->size - 1]);
 }
 
 char cell_peek(cell_t* c, int pos) {
-  assert(c->size > pos);
-  return(c->heap[c->size - pos - 1]);
+    assert(c->size > pos);
+    return (c->heap[c->size - pos - 1]);
 }
 
 
 bool cell_is_trap(cell_t* c) {
-    return c->is_trap;
+    return c->type == TRAP;
+}
+
+bool cell_has_wall(cell_t* c) {
+    return c->type == WALL;
 }
 
 
@@ -81,21 +85,23 @@ void cell_print(cell_t* c, int slice, bool highlighted) {
 
         if (cell_is_trap(c)) printf("<");
         else printf("|");
-    }    
+    }
     else if (slice == 3) {
-        if (cell_is_trap(c)) printf(" ^%c^ ", cell_height(c) <= 1 ? '^' : (char)48+cell_height(c));
-        else {
-            char c1 = '-', c2 = '-', c3 = '-';
-            if (highlighted) {
-                c1 = '=';
-                c2 = '=';
-                c3 = '=';
-            }
-            if (cell_height(c) >= 100) c1 = (char)(cell_height(c)/100+48);
-            if (cell_height(c) >= 10) c3 = (char)(cell_height(c)%10+48);
-            if (cell_height(c) >= 10) c2 = (char)((cell_height(c)%100)/10+48);
-            else if (cell_height(c) > 1) c2 = (char)(cell_height(c)+48);
-            printf(" %c%c%c ", c1, c2, c3);
+        char c1 = '-', c2 = '-', c3 = '-';
+        if (cell_is_trap(c)) {
+            c1 = '^';
+            c2 = '^';
+            c3 = '^';
         }
+        else if (highlighted) {
+            c1 = '=';
+            c2 = '=';
+            c3 = '=';
+        }
+        if (cell_height(c) >= 100) c1 = (char)(cell_height(c)/100+48);
+        if (cell_height(c) >= 10) c3 = (char)(cell_height(c)%10+48);
+        if (cell_height(c) >= 10) c2 = (char)((cell_height(c)%100)/10+48);
+        else if (cell_height(c) > 1) c2 = (char)(cell_height(c)+48);
+        printf(" %c%c%c ", c1, c2, c3);
     }
 }

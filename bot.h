@@ -4,7 +4,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#define NB_MAX_MOVES (HEIGHT*(WIDTH-1))
+#define NB_MAX_MOVES (HEIGHT_MAX*(WIDTH_MAX-1))
 
 typedef struct bot {
     int player;
@@ -15,16 +15,18 @@ typedef struct bot {
 
 bot_t init_bot(int player);
 
-void playable_moves_vu(bot_t* ia, board_t* b); //modifie le tab playable_moves et nb_moves par les coups jouables verticalement vers le haut par player
-void playable_moves_vd(bot_t* ia, board_t* b); //pareil  vers le bas
-void playable_moves_h(bot_t* ia, board_t* b, int line);  //pareil horizontalement
+ // Modifie le tab playable_moves et nb_moves par les coups jouables verticalement vers le haut par player
+void playable_moves_v(bot_t* ia, board_t* b, bool mov);
+void playable_moves_h(bot_t* ia, board_t* b, int line);
 
+// Return true if a move is play
 bool play_bot_v(bot_t* ia, board_t* b, bool mov);
 void play_bot_h(bot_t* ia, board_t* b, int line);
 
-// return true if a vertical move is play
+// Return true if an up move was played
 bool bot_turn(bot_t* ia, board_t* b, int line);
 
+// Same functions as board with arrows to show bot movements
 void cell_print_bot(cell_t* c, int slice, bool mov, bool dir, bool start);
 void board_print_bot(board_t* b, bot_t* ia, bool dir);
 

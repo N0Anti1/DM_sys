@@ -5,13 +5,19 @@
 #define BOARD_H
 
 typedef struct board {
-    cell_t board[HEIGHT][WIDTH];
+    int width;
+    int height;
+    int nb_hedgehog;
+    cell_t board[HEIGHT_MAX][WIDTH_MAX];
     int hh_end[NB_PLAYER_MAX];     // Amount of hedgehog at the end of the race
 } board_t;
 
 
-board_t create_board();
+board_t create_board(int width, int height, int nb_hedgehog, float trap, float wall);
 void init_board(board_t* b, int nb_player);
+int get_width(board_t* b);
+int get_height(board_t* b);
+int get_nb_hedgehog(board_t* b);
 
 void board_push(board_t* b, int line, int row, char ctn);
 char board_pop(board_t* b, int line, int row);
@@ -20,6 +26,7 @@ char board_top(board_t* b, int line, int row);
 char board_peek(board_t* b, int line, int row, int pos); // pos=0 => top
 
 bool board_is_trap(board_t* b, int line, int row);
+bool board_has_wall(board_t* b, int line, int row);
 
 void board_print(board_t* b, int highlighted_line);
 
