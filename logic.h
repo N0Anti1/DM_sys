@@ -17,6 +17,6 @@ void play_v(board_t* b, int line, int row, bool mov);
 bool is_line_playable(board_t* b, int line);
 bool is_game_end(board_t* b);
 
-void print_classement(board_t* b, int nb_player);
+void print_ranking(board_t* b, int nb_player);
 
 #endif
