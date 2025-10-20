@@ -334,7 +334,7 @@ void play_game(int width_board, int height_board, int nb_hedgehog, int nb_player
     clear_std();
     print_center("Fin de la partie !!!");
     printf("\nVoici le classement :\n");
-    print_classement(b, nb_player + nb_bot);
+    print_ranking(b, nb_player + nb_bot);
     printf("\nEntrez qqch pour continuer\n");
     scan();
 }
