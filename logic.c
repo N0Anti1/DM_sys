@@ -52,7 +52,7 @@ bool is_line_playable(board_t* b, int line) {
 
 bool is_game_end(board_t* b) {
     for (int i = 0; i < NB_PLAYER_MAX; i+=1) {
-        if (b->hh_end[i] == get_nb_hedgehog(b) - 1) {
+        if (b->hh_end[i] >= get_nb_hedgehog(b) - 1) {
             return true;
         }
     }
