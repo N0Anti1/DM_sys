@@ -60,7 +60,7 @@ bool is_game_end(board_t* b) {
 }
 
 
-void print_classement(board_t* b, int nb_player) {
+void print_ranking(board_t* b, int nb_player) {
     int rank = 1;
     bool print = true;
     for (int n = get_nb_hedgehog(b); n >= 0 && rank <= nb_player; n-=1) {
