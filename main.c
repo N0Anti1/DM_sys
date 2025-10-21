@@ -322,10 +322,12 @@ void play_game(int width_board, int height_board, int nb_hedgehog, int nb_player
             int de = rand() % get_height(b);
             clear_std();
             board_print_bot(b, &(bots[ia]), bot_turn(&(bots[ia]), b, de));
-            printf("Entrez qqch pour continuer\n");
-            if (nb_player > 0) scan();
-            if (buffer[0] == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
-                if (print_option_ingame()) goto endGame;
+            if (nb_player > 0) {
+                printf("Entrez qqch pour continuer\n");
+                scan();
+                if (buffer[0] == (int)'o' && (int)strlen(buffer) == 1 && (int)strlen(trash) == 0) {
+                    if (print_option_ingame()) goto endGame;
+                }
             }
         }
     }
